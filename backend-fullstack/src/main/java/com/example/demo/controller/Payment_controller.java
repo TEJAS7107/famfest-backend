@@ -39,9 +39,12 @@ import com.example.demo.model.TransactionDetails;
 import com.example.demo.model.userinfo;
 import com.example.demo.optimizationServices.PdfService;
 import com.example.demo.optimizationServices.TransactionHistory;
+import com.example.demo.services.EmailSendService;
 import com.example.demo.services.PaymentGatewayService;
 import com.google.zxing.WriterException;
 import com.razorpay.Order;
+
+import jakarta.mail.MessagingException;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -65,6 +68,9 @@ public class Payment_controller {
 
     @Autowired
     private PdfService pdfService;
+
+    @Autowired
+    EmailSendService emailSendService;
 
     @PostMapping("/Transaction")
     public OrderFormat TransactionProcess(@RequestBody PaymentResponse paymentResponse) throws Exception {
@@ -104,7 +110,7 @@ public class Payment_controller {
     // MediaType.APPLICATION_PDF_VALUE)
     @PostMapping("/GetTicket")
     public ResponseEntity<byte[]> downloadTicket(@RequestBody PdfResponse pdfResponse)
-            throws IOException, NameNotFoundException, WriterException {
+            throws IOException, NameNotFoundException, WriterException, MessagingException {
 
         // List<Eventdetail> eventList = eventData.findAll();
         List<byte[]> data = new ArrayList<>();
@@ -131,6 +137,9 @@ public class Payment_controller {
         byte[] pdfArr = pdfService.getTicket(Name, Amount, Location, Event_ID, Event_Name,
                 Order_Id, Count);
         data.add(pdfArr);
+
+        // semailSendService.sendPdftoEmail(userList.get().getEmail(),
+        // list2.get().getEventName(), pdfArr);
 
         // return data;
         HttpHeaders headers = new HttpHeaders();
