@@ -33,17 +33,19 @@ public class Message_controller {
 
     @PostMapping("/user_message")
     public String SendMessage(@RequestBody UserMessage messageBody) {
-
+    	String email = messageBody.getUserEmail();
         List<userinfo> data = loginData.findAll();
         for (userinfo entity : data) {
             if (entity.getRole().equalsIgnoreCase("ROLE_ADMIN")) {
                 emailSendService.sendEmail(entity.getEmail(), messageBody.getUserName(),
                         messageBody.getUserEmail(), messageBody.getUserMessage());
+                
             }
         }
         // emailSendService.sendEmail("tejasKadam2907@gmail.com", "Hello", "Yo Bro");
 
         // emailSendService.SendMail(messageBody);
+        emailSendService.sendToUser(email);
         messageData.save(messageBody);
 
         return "Message sent successfully";

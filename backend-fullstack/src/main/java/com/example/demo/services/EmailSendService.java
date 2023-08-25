@@ -25,7 +25,18 @@ public class EmailSendService {
         message.setSubject(username);
         // message.setText();
         message.setText("Senders Mail ID : " + email + "                                " + "Message : " + text);
+        
+        
         javaMailSender.send(message);
+       // sendToUser(email);
+    }
+    
+    public void sendToUser(String email) {
+    	SimpleMailMessage mm = new SimpleMailMessage();
+    	mm.setTo(email);
+    	mm.setSubject("System generated mail");
+    	mm.setText("We are so glad that you contacted Us, our team will get back to you soon");
+    	javaMailSender.send(mm);
     }
 
     public void verifyMail(String To, String Otp) {
